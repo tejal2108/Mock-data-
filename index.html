@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Display Data</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+</head>
+<body ng-controller="myController">
+
+    <div>
+        <label for="search">Search by Name:</label>
+        <input type="text" id="search" ng-model="searchName">
+    </div>
+
+    <div>
+        <label for="domainFilter">Filter by Domain:</label>
+        <select id="domainFilter" ng-model="domainFilter">
+            <option value="">All</option>
+            <option ng-repeat="domain in uniqueDomains" value="{{domain}}">{{ domain }}</option>
+        </select>
+    </div>
+
+    <div>
+        <label for="genderFilter">Filter by Gender:</label>
+        <select id="genderFilter" ng-model="genderFilter">
+            <option value="">All</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+        </select>
+    </div>
+
+    <div>
+        <label for="availabilityFilter">Filter by Availability:</label>
+        <select id="availabilityFilter" ng-model="availabilityFilter">
+            <option value="">All</option>
+            <option value="true">Available</option>
+            <option value="false">Not Available</option>
+        </select>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Gender</th>
+                <th>Avatar</th>
+                <th>Domain</th>
+                <th>Available</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="person in displayedPeople | filter: {first_name: searchName, domain: domainFilter, gender: genderFilter, available: availabilityFilter}">
+                <td>{{ person.id }}</td>
+                <td>{{ person.first_name }}</td>
+                <td>{{ person.last_name }}</td>
+                <td>{{ person.email }}</td>
+                <td>{{ person.gender }}</td>
+                <td><img ng-src="{{ person.avatar }}" alt="Avatar" width="50" height="50"></td>
+                <td>{{ person.domain }}</td>
+                <td>{{ person.available ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div>
+        <button ng-click="prevPage()" ng-disabled="currentPage === 1">Previous</button>
+        Page {{ currentPage }} of {{ totalPages }}
+        <button ng-click="nextPage()" ng-disabled="currentPage === totalPages">Next</button>
+    </div>
+
+    <div>
+        <label for="teamDomain">Select Domain to Create Team:</label>
+        <select id="teamDomain" ng-model="teamDomain" ng-options="domain for domain in uniqueAvailableDomains">
+            <option value="">Select Domain</option>
+        </select>
+
+        <button ng-click="createTeam()">Create Team</button>
+    </div>
+
+    <div ng-if="teamDetails.length > 0">
+        <h2>Team Details</h2>
+        <ul>
+            <li ng-repeat="member in teamDetails">{{ member.first_name }} ({{ member.domain }})</li>
+        </ul>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
